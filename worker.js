@@ -10,6 +10,13 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, Accept",
 };
 
+// Static frozen object for JSON response headers to avoid object creation and spreading per request
+const JSON_HEADERS = Object.freeze({
+  "Content-Type": "application/json",
+  "Cache-Control": "no-cache, no-store, must-revalidate",
+  ...CORS_HEADERS,
+});
+
 async function handleRequest(request, env) {
   const url = new URL(request.url);
 
@@ -205,11 +212,7 @@ async function sendTelegramMessage({ botToken, chatId, text }) {
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      ...CORS_HEADERS,
-    },
+    headers: JSON_HEADERS,
   });
 }
 
