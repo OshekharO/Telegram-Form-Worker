@@ -213,9 +213,14 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+// Single-pass HTML escaping using regex dictionary mapping
+// Reduces multiple string traversals/allocations into a single regex pass.
+const HTML_ESCAPE_MAP = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+};
+
 function escapeHtml(value) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return value.replace(/[&<>]/g, (char) => HTML_ESCAPE_MAP[char]);
 }
